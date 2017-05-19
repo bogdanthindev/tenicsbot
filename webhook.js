@@ -24,6 +24,7 @@ app.get('/webhook', (req, res) => {
 
 /* Handling all messenges */
 app.post('/webhook', (req, res) => {
+  console.log(req.body, req.body.result, req.body.result.parameters, req.body.result.fulfillment)
   if (req.body.object === 'page') {
     req.body.entry.forEach((entry) => {
       console.log(entry.messaging);
@@ -35,6 +36,13 @@ app.post('/webhook', (req, res) => {
     });
     res.status(200).end();
   }
+  res.json({
+    data: {
+      slack: {
+        text: 'Merge coitze'
+      }
+    }
+  });
 });
 
 function sendMessage(event) {
