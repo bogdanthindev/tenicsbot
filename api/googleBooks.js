@@ -18,7 +18,7 @@ const mapBookResult = ({
 const searchByTitle = (bookTitle) => {
   let titleSearchPromise = new Promise((resolve, reject) => {
     books.search(bookTitle, Object.assign({}, options, { field: 'title' }), (err, result, apiResponse) => {
-      if (err) reject(err)
+      if (err) return reject(err)
       resolve(mapBookResult(result[0]))
     })
   })
@@ -28,7 +28,7 @@ const searchByTitle = (bookTitle) => {
 const searchByAuthor = (author) => {
   let authorSearchPromise = new Promise((resolve, reject) => {
     books.search(author, Object.assign({}, options, { field: 'author' }), (err, result, apiResponse) => {
-      if (err) reject(err)
+      if (err) return reject(err)
       resove(mapBookResult(result[0]))
     })
   })
@@ -38,7 +38,7 @@ const searchByAuthor = (author) => {
 const searchByTitleAndAuthor = (bookTitle, author) => {
   let titleAndAuthorPromise = new Promise((resolve, reject) => {
     books.search(`${bookTitle} ${author}`, options, (err, result, apiResponse) => {
-      if (err) reject(err)
+      if (err) return reject(err)
       resolve(mapBookResult(result[0]))
     })
   })
