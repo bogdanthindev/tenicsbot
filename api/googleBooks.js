@@ -3,35 +3,44 @@ const { API_KEY } = require('../config')
 
 const options = {
   key: API_KEY,
-  limit: 10,
+  limit: 1,
   type: 'books',
   order: 'relevance',
   lang: 'en'
 }
 
 const mapBookResult = ({ id, title, authors, description, pageCount, averageRating  }) => ({
-  id, title, authors, description, pageCount, averageRatin
+  id, title, authors, description, pageCount, averageRating
 })
 
 const searchByTitle = (bookTitle) => {
-  books.search(bookTitle, Object.assign({}, options, { field: 'title' }), (err, result, apiResponse) => {
-    if (err) return
-    return mapBookResult(result[0])
+  let titleSearchPromise = new Promise((resolve, reject) => {
+    books.search(bookTitle, Object.assign({}, options, { field: 'title' }), (err, result, apiResponse) => {
+      if (err) reject(err)
+      resolve(mapBookResult(result[0]))
+    })
   })
+  return titleSearchPromise
 }
 
 const searchByAuthor = (author) => {
-  books.search(author, Object.assign({}, options, { field: 'author' }), (err, result, apiResponse) => {
-    if (err) return
-    return mapBookResult(result[0])
+  let authorSearchPromise = new Promise((resolve, reject) => {
+    books.search(author, Object.assign({}, options, { field: 'author' }), (err, result, apiResponse) => {
+      if (err) reject(err)
+      resove(mapBookResult(result[0]))
+    })
   })
+  return authorSearchPromise
 }
 
 const searchByTitleAndAuthor = (bookTitle, author) => {
-  books.search(`${bookTitle} ${author}`, options, (err, result, apiResponse) => {
-    if (err) return
-    return mapBookResult(result[0])
+  let titleAndAuthorPromise = new Promise((resolve, reject) => {
+    books.search(`${bookTitle} ${author}`, options, (err, result, apiResponse) => {
+      if (err) reject(err)
+      resolve(mapBookResult(result[0]))
+    })
   })
+  return titleAndAuthorPromise
 }
 
 module.exports = {
