@@ -47,7 +47,6 @@ function sendMessage(event) {
 
   apiai.on('response', (response) => {
     let aiText = response.result.fulfillment.speech;
-
       request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: process.env.FB_PAGE_ACCESS_TOKEN},
