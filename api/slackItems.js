@@ -1,7 +1,6 @@
 const createTextItem = (text) => ({ text })
 
-const createAttachmentItem = (item) => ({
-  attachments: [
+const createAttachmentItem = (item) => (
     {
       fallback: "Book information.",
       color: "#ffeeff",
@@ -12,7 +11,10 @@ const createAttachmentItem = (item) => ({
       text: item.description,
       thumb_url: item.thumbnail
     }
-  ]
+)
+
+const createNoBookFound = (item) => ({
+    text: 'I couldn\'t find this book. Sorry'
 })
 
 /*
@@ -28,19 +30,6 @@ const createAttachmentItem = (item) => ({
         "text": "Falken's Maze",
         "type": "button",
         "value": "maze"
-    },
-    {
-        "name": "game",
-        "text": "Thermonuclear War",
-        "style": "danger",
-        "type": "button",
-        "value": "war",
-        "confirm": {
-            "title": "Are you sure?",
-            "text": "Wouldn't you prefer a good game of chess?",
-            "ok_text": "Yes",
-            "dismiss_text": "No"
-        }
     }
 ]
 */
@@ -61,5 +50,6 @@ const createButtonItem = ({ text, label, callbackId }, actions) => ({
 module.exports = {
   createTextItem,
   createAttachmentItem,
-  createButtonItem
+  createButtonItem,
+  createNoBookFound
 }
