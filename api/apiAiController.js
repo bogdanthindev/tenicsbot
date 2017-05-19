@@ -12,6 +12,8 @@ const sendMessage = (response, data) => {
 }
 
 const augumentResponse = (originalData, bookData) => {
+    console.log('original', originalData)
+    console.log('book', bookData)
     originalData.bookData = bookData
     return originalData
 }

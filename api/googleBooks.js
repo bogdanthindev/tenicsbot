@@ -15,21 +15,21 @@ const mapBookResult = ({
   id, title, authors, description, pageCount, averageRating, thumbnail, link
 })
 
-const searchByTitle = (bookTitle) => {
+const searchByTitle = (bookTitle, bookLimit = 3) => {
   let titleSearchPromise = new Promise((resolve, reject) => {
     books.search(bookTitle, Object.assign({}, options, { field: 'title' }), (err, result, apiResponse) => {
       if (err) return reject(err)
-      resolve(mapBookResult(result[0]))
+      resolve(result.slice(0, bookLimit).map(mapBookResult))
     })
   })
   return titleSearchPromise
 }
 
-const searchByAuthor = (author) => {
+const searchByAuthor = (author, bookLimit = 3) => {
   let authorSearchPromise = new Promise((resolve, reject) => {
     books.search(author, Object.assign({}, options, { field: 'author' }), (err, result, apiResponse) => {
       if (err) return reject(err)
-      resove(mapBookResult(result[0]))
+      resolve(result.slice(0, bookLimit).map(mapBookResult))
     })
   })
   return authorSearchPromise
@@ -39,7 +39,7 @@ const searchByTitleAndAuthor = (bookTitle, author) => {
   let titleAndAuthorPromise = new Promise((resolve, reject) => {
     books.search(`${bookTitle} ${author}`, options, (err, result, apiResponse) => {
       if (err) return reject(err)
-      resolve(mapBookResult(result[0]))
+      resolve(result.slice(0, 1).map(mapBookResult))
     })
   })
   return titleAndAuthorPromise
