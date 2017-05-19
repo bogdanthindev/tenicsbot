@@ -9,8 +9,10 @@ const options = {
   lang: 'en'
 }
 
-const mapBookResult = ({ id, title, authors, description, pageCount, averageRating  }) => ({
-  id, title, authors, description, pageCount, averageRatin
+const mapBookResult = ({
+  id, title, authors, description, pageCount, averageRating, thumbnail, link
+}) => ({
+  id, title, authors, description, pageCount, averageRating, thumbnail, link
 })
 
 const searchByTitle = (bookTitle) => {
