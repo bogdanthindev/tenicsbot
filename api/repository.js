@@ -14,7 +14,7 @@ module.exports.saveData = (originalMessage, user, startBook, cb) => {
         book.startDate = new Date().getTime()
     }
 
-    let collection = mongo.collection('books');
+    let collection = mongo.collection('books')
 
     collection.find({id: book.id}).limit(1).toArray((err, foundBooks) => {
         if (err) {
@@ -45,5 +45,15 @@ module.exports.saveData = (originalMessage, user, startBook, cb) => {
                 return cb(null, book)
             })
         }
+    })
+}
+
+module.exports.getInProgressBooks = () => {
+    const collection = mongo.collection('books')
+    return new Promise((resolve, reject) => {
+        collection.find({status: 'progress'}).toArray((err, books) => {
+            if (err) return reject(err)
+            return resolve(books)
+        })
     })
 }

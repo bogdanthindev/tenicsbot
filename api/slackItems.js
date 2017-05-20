@@ -43,9 +43,22 @@ const createButtonItem = ({ label, callbackId, color }, actions = standardAction
     }
 )
 
+const createBookCards = (books) => ({attachments: books.map(item => ({
+        fallback: "Book information.",
+        color: "#2D2522",
+        author_name: item.author,
+        author_link: item.link,
+        title: item.title,
+        title_link: item.link,
+        text: item.description,
+        thumb_url: item.thumbnail
+    }))
+})
+
 module.exports = {
   createTextItem,
   createAttachmentItem,
   createButtonItem,
-  createNoBookFound
+  createNoBookFound,
+  createBookCards
 }

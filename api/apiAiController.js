@@ -2,6 +2,7 @@ const Promise = require('bluebird')
 const apiAiParser = require('./apiAiParser')
 const slackItems = require('./slackItems')
 const SearchBook = require('./SearchBook')
+const { getInProgressBooks } = require('./repository')
 const _ = require('lodash')
 
 const sendMessage = (response, data) => {
@@ -23,6 +24,11 @@ const Controller = (req, res) => {
     if (data.action === 'search_book') {
         SearchBook(data)
             .then(createResponse)
+            .then(sendMessage.bind(null, res))
+            .catch(sendMessage.bind(null, {}))
+    } else if (data.action === 'ongoing_book') {
+        getInProgressBooks()
+            .then(slackItems.createBookCards)
             .then(sendMessage.bind(null, res))
             .catch(sendMessage.bind(null, {}))
     } else {
