@@ -17,8 +17,13 @@ const standardActions = [
     }
 ]
 
-const createAttachmentItem = (item) => (
-    {
+const createAttachmentItem = (item) => {
+    let actions = [standardActions[0]]
+    if (item.status === 'pending') {
+        actions = standardActions
+    }
+
+    return {
       fallback: "Book information.",
       color: "#2D2522",
       author_name: item.author,
@@ -28,9 +33,9 @@ const createAttachmentItem = (item) => (
       text: item.description,
       thumb_url: item.thumbnail,
       callback_id: 'bookCard',
-      actions: standardActions
+      actions: actions
     }
-)
+}
 
 const createNoBookFound = (item) => ({
     text: 'I couldn\'t find this book. Sorry'

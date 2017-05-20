@@ -105,3 +105,18 @@ module.exports.markBookAsFinished = (bookId) => {
             return collection.findOne({ id: bookId })
         })
 }
+
+module.exports.checkBookInDb = (book) => {
+  const collection = mongo.collection('books')
+  return collection.findOne({id: md5(book.link)})
+}
+
+module.exports.saveBook = (book) => {
+  const collection = mongo.collection('books')
+  book.id = md5(book.link)
+  book.status = 'pending'
+  book.users = []
+  return collection.insertOne(book).then(() => {
+      return book
+  })
+}
