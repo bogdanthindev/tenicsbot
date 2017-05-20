@@ -6,6 +6,12 @@ const standardActions = [
         "text": "Join",
         "type": "button",
         "value": "join"
+    },
+    {
+        "name": "start",
+        "text": "Start",
+        "type": "button",
+        "value": "start"
     }
 ]
 
