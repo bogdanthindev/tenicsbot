@@ -66,15 +66,37 @@ const bookFinished = (book) => ({
         fallback: "Book information.",
         color: "#A2CD78",
         title: book.title,
-        pretext: "Congratulations on finishing this book! Now set a meetup!",
+        pretext: "Congratulations on finishing this book! Now set a meetup! :+1:",
         callback_id: book.id,
-        actions: [{
-            "name": "setMeetup",
-            "text": "Set meetup",
-            "type": "button",
-            "style": "primary",
-            "value": "finish"
-        }]
+        actions: [
+            {
+                "name": "location",
+                "text": "Pick a location",
+                "type": "select",
+                "options": [
+                    { "text": "Library 1", "value": "lib1" },
+                    { "text": "Library 2", "value": "lib2" },
+                    { "text": "Library 3", "value": "lib3" }
+                ]
+            },
+            {
+                "name": "hour",
+                "text": "Pick a time",
+                "type": "select",
+                "options": [
+                    { "text": "12:00", "value": 12 },
+                    { "text": "15:00", "value": 15 },
+                    { "text": "18:00", "value": 18 }
+                ]
+            },
+            {
+                "name": "setMeetup",
+                "text": "Set meetup",
+                "type": "button",
+                "style": "primary",
+                "value": "finish"
+            }
+        ]
     }]
 })
 
