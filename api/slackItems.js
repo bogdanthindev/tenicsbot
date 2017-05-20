@@ -1,5 +1,20 @@
 const createTextItem = (text) => ({ text })
 
+const standardActions = [
+    {
+        "name": "buy",
+        "text": "Buy",
+        "type": "button",
+        "value": "buy"
+    },
+    {
+        "name": "start",
+        "text": "Start",
+        "type": "button",
+        "value": "start"
+    }
+]
+
 const createAttachmentItem = (item) => (
     {
       fallback: "Book information.",
@@ -9,7 +24,9 @@ const createAttachmentItem = (item) => (
       title: item.title,
       title_link: item.link,
       text: item.description,
-      thumb_url: item.thumbnail
+      thumb_url: item.thumbnail,
+      callback_id: 'test',
+      actions: standardActions
     }
 )
 
@@ -34,18 +51,16 @@ const createNoBookFound = (item) => ({
 ]
 */
 
-const createButtonItem = ({ text, label, callbackId }, actions) => ({
-  text,
-  attachments: [
+
+
+const createButtonItem = ({ label, callbackId, color }, actions = standardActions) => (
     {
       text: label,
       callback_id: callbackId,
-      color: "#ffeeff",
+      color: color,
       actions
     }
-  ]
-})
-
+)
 
 module.exports = {
   createTextItem,

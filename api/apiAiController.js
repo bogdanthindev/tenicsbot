@@ -17,8 +17,10 @@ const createResponse = (data) => {
         return slackItems.createNoBookFoundItem()
     }
 
+    let attachments = _.map(data, slackItems.createAttachmentItem)
+
     return {
-        attachments: _.map(data, slackItems.createAttachmentItem)
+        attachments: attachments
     }
 }
 
