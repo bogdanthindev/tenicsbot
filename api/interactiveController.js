@@ -59,6 +59,10 @@ const finishBook = (bookId, res) => {
     })
 }
 
+const setMeetup = (res) => {
+  res.json(slackItems.createRSVP())
+}
+
 const interactiveController = (req, res) => {
   const { original_message: originalMessage, user, actions, callback_id, action_ts } = JSON.parse(req.body.payload)
 
@@ -71,6 +75,9 @@ const interactiveController = (req, res) => {
       break
     case 'finish':
       finishBook(callback_id, res)
+      break
+    case 'setMeetup':
+      setMeetup(res)
       break
     default:
       return

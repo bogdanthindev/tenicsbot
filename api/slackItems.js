@@ -77,6 +77,12 @@ const bookFinished = (book) => ({
                     { "text": "Library 1", "value": "lib1" },
                     { "text": "Library 2", "value": "lib2" },
                     { "text": "Library 3", "value": "lib3" }
+                ],
+                "selected_options": [
+                    {
+                        "text": "Library 2",
+                        "value": "lib2"
+                    }
                 ]
             },
             {
@@ -87,6 +93,12 @@ const bookFinished = (book) => ({
                     { "text": "12:00", "value": 12 },
                     { "text": "15:00", "value": 15 },
                     { "text": "18:00", "value": 18 }
+                ],
+                "selected_options": [
+                    {
+                        "text": "18:00",
+                        "value": "18"
+                    }
                 ]
             },
             {
@@ -94,9 +106,17 @@ const bookFinished = (book) => ({
                 "text": "Set meetup",
                 "type": "button",
                 "style": "primary",
-                "value": "finish"
+                "value": "setMeetup"
             }
         ]
+    }]
+})
+
+const createRSVP = (time = '18:00', location = 'Library 2') => ({
+    attachments: [{
+        title: `Are you attending to the meetup at ${location} - ${time}?`,
+        footer: `Please react with :+1: - Yes  |  :-1: - No`,
+        color: "#A2CD78"
     }]
 })
 
@@ -106,5 +126,6 @@ module.exports = {
   createButtonItem,
   createNoBookFound,
   createBookCards,
-  bookFinished
+  bookFinished,
+  createRSVP
 }
