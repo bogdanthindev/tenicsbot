@@ -1,5 +1,6 @@
-const md5 = require('md5');
+const md5 = require('md5')
 const _ = require('lodash')
+const Promise = require('bluebird')
 
 module.exports.saveData = (originalMessage, user, startBook, cb) => {
     let msg = originalMessage.attachments[0]
