@@ -9,7 +9,7 @@ const getFooter = (book) =>
     : `${book.users.length}: ${getJoinedUsers(book)}`
 
 const joinBook = (originalMessage, user, res) => {
-  repository.saveData(originalMessage, user, (err, book) => {
+  repository.saveData(originalMessage, user, false, (err, book) => {
     if (err) {
         res.send(404)
     }
@@ -28,15 +28,19 @@ const startBook = (originalMessage, user, res) => {
         res.send(404)
     }
 
+    const newAttachment = Object.assign({}, originalMessage.attachments[0], {
+        actions: [originalMessage.attachments[0].actions[0]]
+    })
+
   res.json({ attachments: [
     newAttachment,
     {
       "fallback": "Required plain-text summary of the attachment.",
-      "color": "#36a64f",
-      "pretext": "The reading of this book has started.",
+      "color": "#A2CD78",
+      "text": "The reading of this book has started.",
     }
   ]})
-}
+})}
 
 const interactiveController = (req, res) => {
   const { original_message: originalMessage, user, actions, callback_id, action_ts } = JSON.parse(req.body.payload)

@@ -18,7 +18,7 @@ const standardActions = [
 const createAttachmentItem = (item) => (
     {
       fallback: "Book information.",
-      color: "#ffeeff",
+      color: "#2D2522",
       author_name: item.author,
       author_link: item.link,
       title: item.title,

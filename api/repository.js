@@ -11,7 +11,7 @@ module.exports.saveData = (originalMessage, user, startBook, cb) => {
     book.status = startBook ? 'progress' : 'pending'
 
     if (startBook) {
-        book.startDate = parseInt(originalMessage.action_ts.split('.')[0])
+        book.startDate = new Date().getTime()
     }
 
     let collection = mongo.collection('books');
