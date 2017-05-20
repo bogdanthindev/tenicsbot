@@ -48,7 +48,9 @@ const startBook = (originalMessage, user, res) => {
 const finishBook = (bookId, res) => {
   repository
     .markBookAsFinished(bookId)
-    .then(res.json)
+    .then(book => {
+      res.json(slackItems.bookFinished(book))
+    })
 }
 
 const interactiveController = (req, res) => {
