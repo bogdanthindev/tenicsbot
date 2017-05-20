@@ -3,7 +3,7 @@ const repository = require('./repository')
 const { getFooter } = require('./helpers')
 
 const joinBook = (originalMessage, user, res) => {
-  repository.saveData(originalMessage, user, false, (err, book) => {
+  repository.joinBook(originalMessage, user, (err, book) => {
     if (err) {
         res.send(404)
     }
@@ -12,20 +12,26 @@ const joinBook = (originalMessage, user, res) => {
         footer: getFooter(book)
     })
 
-    res.json({ attachments: [
-        newAttachment,
-        book.status === 'progress' && {
+    let attachments = [
+        newAttachment
+      ]
+
+    if (book.status === 'progress') {
+        attachments.push({
           "fallback": "Required plain-text summary of the attachment.",
           "color": "#A2CD78",
           "text": "The reading of this book has started.",
-        }
-      ]
-    })
+        })
+    }
+
+    let response = { attachments: attachments}
+
+    res.json(response)
   })
 }
 
 const startBook = (originalMessage, user, res) => {
-  repository.saveData(originalMessage, user, true, (err, book) => {
+  repository.startBook(originalMessage, user, (err, book) => {
     if (err) {
         res.send(404)
     }
