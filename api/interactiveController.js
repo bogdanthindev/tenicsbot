@@ -18,7 +18,15 @@ const joinBook = (originalMessage, user, res) => {
         footer: getFooter(book)
     })
 
-    res.json({ attachments: [newAttachment] })
+    res.json({ attachments: [
+        newAttachment,
+        book.status === 'progress' && {
+          "fallback": "Required plain-text summary of the attachment.",
+          "color": "#A2CD78",
+          "text": "The reading of this book has started.",
+        }
+      ]
+    })
   })
 }
 
@@ -29,7 +37,8 @@ const startBook = (originalMessage, user, res) => {
     }
 
     const newAttachment = Object.assign({}, originalMessage.attachments[0], {
-        actions: [originalMessage.attachments[0].actions[0]]
+        actions: [originalMessage.attachments[0].actions[0]],
+        footer: getFooter(book)
     })
 
   res.json({ attachments: [

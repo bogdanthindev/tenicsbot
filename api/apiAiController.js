@@ -12,17 +12,10 @@ const sendMessage = (response, data) => {
     })
 }
 
-const createResponse = (data) => {
-    if (!data) {
-        return slackItems.createNoBookFoundItem()
-    }
-
-    let attachments = _.map(data, slackItems.createAttachmentItem)
-
-    return {
-        attachments: attachments
-    }
-}
+const createResponse = (data) =>
+    !data
+        ? slackItems.createNoBookFoundItem()
+        : ({ attachments: _.map(data, slackItems.createAttachmentItem) })
 
 const Controller = (req, res) => {
     console.log(req.body.result.parameters)
