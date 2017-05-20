@@ -1,13 +1,18 @@
 const md5 = require('md5');
 const _ = require('lodash')
 
-module.exports.saveData = (originalMessage, user, cb) => {
+module.exports.saveData = (originalMessage, user, startBook, cb) => {
     let msg = originalMessage.attachments[0]
     let book = {
         id: md5(msg.title_link),
         title: msg.title
     }
     book.users = [user]
+    book.status = startBook ? 'progress' : 'pending'
+
+    if (startBook) {
+        book.startDate = parseInt(originalMessage.action_ts.split('.')[0])
+    }
 
     let collection = mongo.collection('books');
 

@@ -16,12 +16,18 @@ const joinBook = (originalMessage, user, res) => {
   })
 }
 
-const startBook = (originalMessage, res) => {
-  const newAttachment = Object.assign({}, originalMessage.attachments[0], {
-    actions: [originalMessage.attachments[0].actions[0]]
-  })
+const startBook = (originalMessage, user, res) => {
+  repository.saveData(originalMessage, user, true, (err, book) => {
+    if (err) {
+        res.send(404)
+    }
 
-  res.json({ attachments: [newAttachment] })
+    const newAttachment = Object.assign({}, originalMessage.attachments[0], {
+        actions: [originalMessage.attachments[0].actions[0]]
+    })
+
+    res.json({ attachments: [newAttachment] })
+  })
 }
 
 const interactiveController = (req, res) => {
@@ -32,7 +38,7 @@ const interactiveController = (req, res) => {
       joinBook(originalMessage, user, res)
       break
     case 'start':
-      startBook(originalMessage, res)
+      startBook(originalMessage, user, res)
       break
     default:
       return
