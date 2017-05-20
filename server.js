@@ -36,7 +36,7 @@ function startServer() {
     agenda.define('send reminders', reminderController.sendReminders);
 
     agenda.on('ready', () => {
-        agenda.every('5 minutes', 'send reminders')
+        agenda.every('2 minutes', 'send reminders')
         agenda.start()
     })
 
