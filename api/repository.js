@@ -57,3 +57,13 @@ module.exports.getInProgressBooks = () => {
         })
     })
 }
+
+module.exports.markBookAsFinished = (bookId) => {
+    const collection = mongo.collection('books')
+    return new Promise((resolve, reject) => {
+        collection.updateOne({ id: bookId }, { $set: { status: 'finished' } }, (err, item) => {
+            if (err) return reject(err)
+            return resolve(item)
+        })
+    })
+}

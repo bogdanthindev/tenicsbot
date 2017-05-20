@@ -45,12 +45,37 @@ const createButtonItem = ({ label, callbackId, color }, actions = standardAction
     }
 )
 
-const createBookCards = (books) => ({attachments: books.map(book => ({
+const createBookCards = (books) => ({attachments: books.map((book) => ({
         fallback: "Book information.",
-        color: "#2D2522",
+        color: "#A2CD78",
         title: book.title,
-        footer: getFooter(book)
+        footer: getFooter(book),
+        callback_id: book.id,
+        actions: [{
+            "name": "finish",
+            "text": "Finish reading",
+            "type": "button",
+            "style": "danger",
+            "value": "finish"
+        }]
     }))
+})
+
+const bookFinished = (book) => ({
+    attachments: [{
+        fallback: "Book information.",
+        color: "#A2CD78",
+        title: book.title,
+        pretext: "Congratulations on finishing this book! Now set a meetup!",
+        callback_id: book.id,
+        actions: [{
+            "name": "setMeetup",
+            "text": "Set meetup",
+            "type": "button",
+            "style": "primary",
+            "value": "finish"
+        }]
+    }]
 })
 
 module.exports = {
@@ -58,5 +83,6 @@ module.exports = {
   createAttachmentItem,
   createButtonItem,
   createNoBookFound,
-  createBookCards
+  createBookCards,
+  bookFinished
 }
