@@ -23,22 +23,25 @@ const Controller = (req, res) => {
     if (data.action === 'search_book') {
         SearchBook(data)
             .then((foundBook) => {
-              return checkBookInDb(foundBook)
+              return checkBookInDb(foundBook[0])
               .then((bookInDb) => {
-                return [bookInDb, foundBook]
+                return [bookInDb, foundBook[0]]
               })
             })
             .spread((bookInDb, foundBook) => {
-                console.log(bookInDb)
-                if (bookInDb.length) {
-                  return bookInDb[0]
+                if (bookInDb) {
+                  return [bookInDb]
+                } else if (foundBook){
+                    return saveBook(foundBook).then((bk) => [bk])
                 } else {
-                    return saveBook(foundBook)
+                    return null
                 }
             })
             .then(createResponse)
             .then(sendMessage.bind(null, res))
-            .catch(sendMessage.bind(null, {}))
+            .catch((e) => {
+                sendMessage({})
+            })
     } else if (data.action === 'ongoing_book') {
         getInProgressBooks()
             .then(slackItems.createBookCards)

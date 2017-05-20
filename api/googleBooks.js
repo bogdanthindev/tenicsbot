@@ -1,5 +1,6 @@
 const books = require('google-books-search')
 const { API_KEY } = require('../config')
+const Promise = require('bluebird')
 
 const options = {
   key: API_KEY,
