@@ -2,16 +2,10 @@ const createTextItem = (text) => ({ text })
 
 const standardActions = [
     {
-        "name": "buy",
-        "text": "Buy",
+        "name": "join",
+        "text": "Join",
         "type": "button",
-        "value": "buy"
-    },
-    {
-        "name": "start",
-        "text": "Start",
-        "type": "button",
-        "value": "start"
+        "value": "join"
     }
 ]
 
@@ -25,7 +19,7 @@ const createAttachmentItem = (item) => (
       title_link: item.link,
       text: item.description,
       thumb_url: item.thumbnail,
-      callback_id: 'test',
+      callback_id: 'bookCard',
       actions: standardActions
     }
 )
@@ -33,25 +27,6 @@ const createAttachmentItem = (item) => (
 const createNoBookFound = (item) => ({
     text: 'I couldn\'t find this book. Sorry'
 })
-
-/*
-[
-    {
-        "name": "game",
-        "text": "Chess",
-        "type": "button",
-        "value": "chess"
-    },
-    {
-        "name": "game",
-        "text": "Falken's Maze",
-        "type": "button",
-        "value": "maze"
-    }
-]
-*/
-
-
 
 const createButtonItem = ({ label, callbackId, color }, actions = standardActions) => (
     {
