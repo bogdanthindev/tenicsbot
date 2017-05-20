@@ -51,6 +51,12 @@ const startBook = (originalMessage, user, res) => {
   ]})
 })}
 
+const finishBook = (bookId, res) => {
+  repository
+    .markBookAsFinished(bookId)
+    .then(res.json)
+}
+
 const interactiveController = (req, res) => {
   const { original_message: originalMessage, user, actions, callback_id, action_ts } = JSON.parse(req.body.payload)
 
@@ -60,6 +66,9 @@ const interactiveController = (req, res) => {
       break
     case 'start':
       startBook(originalMessage, user, res)
+      break
+    case 'finish':
+      finishBook(callback_id, res)
       break
     default:
       return
