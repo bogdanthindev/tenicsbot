@@ -1,6 +1,12 @@
 const slackItems = require('./slackItems')
 const repository = require('./repository')
-const getJoinedUsers = (footer, user) => !!footer ? `<@${user.id}>, ${footer}` : `<@${user.id}> joined`
+
+const getJoinedUsers = (book) => book.users.map(u => `<@${u.id}>`).join(', ') + ' joined'
+
+const getFooter = (book) =>
+  book.users.length === 0
+    ? 'No users joined.'
+    : `${book.users.length}: ${getJoinedUsers(book)}`
 
 const joinBook = (originalMessage, user, res) => {
   repository.saveData(originalMessage, user, (err, book) => {
@@ -9,7 +15,7 @@ const joinBook = (originalMessage, user, res) => {
     }
 
     const newAttachment = Object.assign({}, originalMessage.attachments[0], {
-        footer: book.users.map(u => `<@${u.id}>`).join(', ') + ' joined'
+        footer: getFooter(book)
     })
 
     res.json({ attachments: [newAttachment] })
