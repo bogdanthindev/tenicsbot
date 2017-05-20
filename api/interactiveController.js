@@ -1,13 +1,19 @@
 const slackItems = require('./slackItems')
-
+const repository = require('./repository')
 const getJoinedUsers = (footer, user) => !!footer ? `<@${user.id}>, ${footer}` : `<@${user.id}> joined`
 
 const joinBook = (originalMessage, user, res) => {
-  const newAttachment = Object.assign({}, originalMessage.attachments[0], {
-    footer: getJoinedUsers(originalMessage.attachments[0].footer, user)
+  repository.saveData(originalMessage, user, (err, book) => {
+    if (err) {
+        res.send(404)
+    }
+
+    const newAttachment = Object.assign({}, originalMessage.attachments[0], {
+        footer: book.users.map(u => `<@${u.id}>`).join(', ') + ' joined'
+    })
+
+    res.json({ attachments: [newAttachment] })
   })
-    
-  res.json({ attachments: [newAttachment] })
 }
 
 const startBook = (originalMessage, res) => {
@@ -29,7 +35,7 @@ const interactiveController = (req, res) => {
       startBook(originalMessage, res)
       break
     default:
-      return 
+      return
   }
 }
 
