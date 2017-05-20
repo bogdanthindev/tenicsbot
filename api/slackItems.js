@@ -9,7 +9,7 @@ const standardActions = [
     },
     {
         "name": "start",
-        "text": "Start",
+        "text": "Start reading",
         "type": "button",
         "value": "start"
     }

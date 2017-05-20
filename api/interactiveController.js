@@ -27,7 +27,14 @@ const startBook = (originalMessage, res) => {
     actions: [originalMessage.attachments[0].actions[0]]
   })
 
-  res.json({ attachments: [newAttachment] })
+  res.json({ attachments: [
+    newAttachment,
+    {
+      "fallback": "Required plain-text summary of the attachment.",
+      "color": "#36a64f",
+      "pretext": "The reading of this book has started.",
+    }
+  ]})
 }
 
 const interactiveController = (req, res) => {
