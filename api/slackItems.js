@@ -1,3 +1,5 @@
+const { getFooter } = require('./helpers')
+
 const createTextItem = (text) => ({ text })
 
 const standardActions = [
@@ -43,15 +45,11 @@ const createButtonItem = ({ label, callbackId, color }, actions = standardAction
     }
 )
 
-const createBookCards = (books) => ({attachments: books.map(item => ({
+const createBookCards = (books) => ({attachments: books.map(book => ({
         fallback: "Book information.",
         color: "#2D2522",
-        author_name: item.author,
-        author_link: item.link,
-        title: item.title,
-        title_link: item.link,
-        text: item.description,
-        thumb_url: item.thumbnail
+        title: book.title,
+        footer: getFooter(book)
     }))
 })
 

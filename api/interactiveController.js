@@ -1,12 +1,6 @@
 const slackItems = require('./slackItems')
 const repository = require('./repository')
-
-const getJoinedUsers = (book) => book.users.map(u => `<@${u.id}>`).join(', ') + ' joined'
-
-const getFooter = (book) =>
-  book.users.length === 0
-    ? 'No users joined.'
-    : `${book.users.length}: ${getJoinedUsers(book)}`
+const { getFooter } = require('./helpers')
 
 const joinBook = (originalMessage, user, res) => {
   repository.saveData(originalMessage, user, false, (err, book) => {
