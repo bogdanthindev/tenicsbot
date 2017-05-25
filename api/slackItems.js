@@ -58,7 +58,7 @@ const createBookCards = (books) => ({attachments: books.map((book) => ({
         callback_id: book.id,
         actions: [{
             "name": "finish",
-            "text": "Finish reading",
+            "text": "Finish reading :+1:",
             "type": "button",
             "style": "danger",
             "value": "finish"
@@ -71,7 +71,7 @@ const bookFinished = (book) => ({
         fallback: "Book information.",
         color: "#A2CD78",
         title: book.title,
-        pretext: "Congratulations on finishing this book! Now set a meetup! :+1:",
+        pretext: ":tada: Congratulations on finishing this book! Now set a meetup! :tada:",
         callback_id: book.id,
         actions: [
             {
@@ -125,6 +125,38 @@ const createRSVP = (time = '18:00', location = 'Library 2') => ({
     }]
 })
 
+const createRatingItem = (text, bookId) => ({
+    text,
+    attachments: [{
+        fallback: 'un fallback',
+        color: 'red',
+        attachment_type: 'default',
+        callback_id: bookId,
+        actions: [
+            {
+                "name": "positive",
+                "text": ":+1:",
+                "type": "button",
+                "style": "primary",
+                "value": "positive"
+            },
+            {
+                "name": "neutral",
+                "text": ":ok_hand:",
+                "type": "button",
+                "value": "neutral"
+            },
+            {
+                "name": "negative",
+                "text": ":-1:",
+                "type": "button",
+                "style": "danger",
+                "value": "negative"
+            }
+        ]
+    }]
+})
+
 module.exports = {
   createTextItem,
   createAttachmentItem,
@@ -132,5 +164,6 @@ module.exports = {
   createNoBookFound,
   createBookCards,
   bookFinished,
-  createRSVP
+  createRSVP,
+  createRatingItem
 }

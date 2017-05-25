@@ -1,4 +1,5 @@
 const repository = require('./repository')
+const slackItems = require('./slackItems')
 const request = require('request')
 const Promise = require('bluebird')
 
@@ -19,10 +20,8 @@ function loadBooksInProgress() {
 
 function sendReminder(book) {
     return new Promise((resolve, reject) => {
-        let text = "Hello " + getUsersString(book.users) + "! How's your progress on " + book.title + "?"
-        let body = JSON.stringify({
-                text: text
-            });
+        let text = `Hello, ${getUsersString(book.users)}! How's your progress on ${book.title}?`
+        let body = JSON.stringify(slackItems.createRatingItem(text, book.id))
         request({
             method: "POST",
             url: "https://hooks.slack.com/services/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",
@@ -32,12 +31,12 @@ function sendReminder(book) {
             body: body
         }, (err, response, body) => {
             if (err) {
-                return reject(err);
+                return reject(err)
             } else {
                 return resolve(response)
             }
         })
-    });
+    })
 }
 
 function getUsersString(users) {

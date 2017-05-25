@@ -2,6 +2,12 @@ const slackItems = require('./slackItems')
 const repository = require('./repository')
 const { getFooter } = require('./helpers')
 
+const ratings = {
+  'positive': 5,
+  'neutral': 0,
+  'negative': -5
+}
+
 const joinBook = (originalMessage, user, res) => {
   repository.joinBook(originalMessage, user, (err, book) => {
     if (err) {
@@ -57,10 +63,14 @@ const finishBook = (bookId, res) => {
     .then(book => {
       res.json(slackItems.bookFinished(book))
     })
-}
+} 
 
 const setMeetup = (res) => {
   res.json(slackItems.createRSVP())
+}
+
+const handleRating = (rating = 0, callback_id, userId, res) => {
+  repository.changeBookRating(callback_id, userId, rating).then(r => console.log(r))
 }
 
 const interactiveController = (req, res) => {
@@ -80,7 +90,7 @@ const interactiveController = (req, res) => {
       setMeetup(res)
       break
     default:
-      return
+      handleRating(ratings[actions[0].name], callback_id, user.id, res)
   }
 }
 

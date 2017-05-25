@@ -120,3 +120,13 @@ module.exports.saveBook = (book) => {
       return book
   })
 }
+
+module.exports.changeBookRating = (bookId, userId, rating) => {
+    const collection = mongo.collection('books')
+    const query = { id: bookId, 'users.id': userId }
+    const object = { $set: { 'users.$.rating': {[new Date().getTime()]: rating} } }
+    const options = { new: true }
+    return collection
+        .updateOne(query, object, options)
+        .exec()
+}

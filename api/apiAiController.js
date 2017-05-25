@@ -6,6 +6,11 @@ const { getInProgressBooks, checkBookInDb, saveBook } = require('./repository')
 const _ = require('lodash')
 
 const sendMessage = (response, data) => {
+    if (!data || !data.attachments.length) {
+        response.json({})
+        return
+    }
+
     response.json({
         data: {
             slack: data
