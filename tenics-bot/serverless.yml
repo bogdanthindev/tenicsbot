@@ -34,9 +34,28 @@ functions:
       - http:
           path: hello
           method: get
+  findBook:
+    handler: books.findBook
+    memorySize: 256
   createBook:
     handler: books.create
+    memorySize: 256
+    events:
+      - http:
+          path: books
+          method: post
+          cors: true
   getBook:
     handler: books.getBook
-  update:
-    handler: books.update
+    memorySize: 256
+    events:
+      - http:
+        path: books/{id}
+        method: get
+        cors: true
+  createRoom:
+    handler: room.createRoom
+    memorySize: 256
+  addBookToRoom:
+    handler: room.addBookToRoom
+    memorySize: 256
