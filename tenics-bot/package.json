@@ -20,7 +20,9 @@
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
+    "aws-sdk": "^2.57.0",
     "babel-runtime": "^6.23.0",
+    "node-fetch": "^1.7.0",
     "source-map-support": "^0.4.14"
   }
 }
