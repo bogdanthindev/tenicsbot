@@ -15,13 +15,12 @@ const mapBookItem = (book) => ({
 })
 
 export const create = async (event, context, callback) => {
-  const { bookTitle } = JSON.parse(event.data)
+  const { bookTitle } = JSON.parse(event.body)
 
   const result = await fetch(createFetchURL(bookTitle))
   const json = await result.json()
   
   const book = mapBookItem(json.items[0])
-  console.log('book', book)
   const params = {
     TableName: 'tenics-books',
     Item: book
@@ -29,6 +28,22 @@ export const create = async (event, context, callback) => {
 
   try {
     await db.call('put', params)
+    callback(null, success(book))
+  } catch (e) {
+    callback(null, failure({ status: false }))
+  }
+}
+
+export const getBook = async (event, context, callback) => {
+  const { bookId } = JSON.parse(event.body)
+
+  const params = {
+    TableName: 'tenics-books',
+    Key: { bookId }
+  }
+
+  try {
+    const book = await db.call('get', params)
     callback(null, success(book))
   } catch (e) {
     callback(null, failure({ status: false }))
