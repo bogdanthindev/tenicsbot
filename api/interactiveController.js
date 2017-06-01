@@ -9,7 +9,10 @@ const ratings = {
 }
 
 const joinBook = (originalMessage, user, res) => {
-  repository.joinBook(originalMessage, user)
+  const { author_name: author, title } = originalMessage.attachments[0]
+  const { id: userId } = user
+
+  repository.joinBook({ author, title, userId })
     .then(resp => {
       const book = resp.value
       const newAttachment = Object.assign({}, originalMessage.attachments[0], {
@@ -28,7 +31,10 @@ const joinBook = (originalMessage, user, res) => {
 }
 
 const startBook = (originalMessage, user, res) => {
-  repository.startBook(originalMessage, user)
+  const { author_name: author, title } = originalMessage.attachments[0]
+  const { id: userId } = user
+
+  repository.startBook({ author, title, userId })
     .then(resp => {
       const newAttachment = Object.assign({}, originalMessage.attachments[0], {
         actions: [originalMessage.attachments[0].actions[0]],
@@ -48,9 +54,8 @@ const startBook = (originalMessage, user, res) => {
 const finishBook = (bookId, res) => {
   repository
     .markBookAsFinished(bookId)
-    .then(book => {
-      res.json(slackItems.bookFinished(book))
-    })
+    .then(r => { res.json(slackItems.bookFinished(r.value)) })
+    .catch(() => { res.send(404) })
 } 
 
 const setMeetup = (res) => {
