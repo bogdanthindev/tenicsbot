@@ -1,4 +1,4 @@
-const moment = require('moment')
+const { dateFormatter } = require('./helpers')
 
 const joinBook = ({ author, title, userId }) =>
   mongo.collection('books')
@@ -16,14 +16,27 @@ const startBook = ({ author, title, userId }) =>
         { upsert: true, returnOriginal: false }
     )
 
-const getInProgressBooks = () => mongo.collection('books').find({status: 'progress'}).toArray()
+const getInProgressBooks = () =>
+  mongo.collection('books').find({status: 'progress'}).toArray()
 
-const markBookAsFinished = (bookId) => mongo.collection('books').findOneAndUpdate({ bookId }, { $set: { status: 'finished' } })
+const markBookAsFinished = (bookId) =>
+  mongo.collection('books')
+    .findOneAndUpdate(
+      { bookId },
+      { $set: { status: 'finished' } }
+    )
 
-const checkBookInDb = (book) => mongo.collection('books').findOne({bookId: book.bookId}).then(b => b)
+const checkBookInDb = (book) =>
+  mongo.collection('books')
+    .findOne({bookId: book.bookId})
+    .then(b => b)
 
-const saveBook = (book) => mongo.collection('books').insertOne(Object.assign(book, { status: 'pending' })).then(r => book)
+const saveBook = (book) =>
+  mongo.collection('books')
+    .insertOne(Object.assign(book, { status: 'pending' }))
+    .then(r => book)
 
+// return book from db; if it's not there, add it
 const checkAndAddBook = book => checkBookInDb(book).then(b => !!b ? b : saveBook(book))
 
 const setMeetupLocation = (bookId, location) => {
@@ -33,17 +46,6 @@ const setMeetupLocation = (bookId, location) => {
       { $set: { 'meetup.location': location } },
       { upsert: true, returnOriginal: false }
     )
-}
-
-const dateFormatter = (day, format = 'YYYY-MM-DD') => {
-  switch (day) {
-    case 'tomorrow':
-      return moment().add(1, 'd').format(format)
-    case 'nextSaturday':
-      return moment().day(6).format(format)
-    case 'nextSunday':
-      return moment().day(7).format(format)
-  }
 }
 
 const setMeetupDay = (bookId, day) => {
