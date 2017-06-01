@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { getFooter } = require('./helpers')
 
 const createTextItem = (text) => ({ text })
@@ -67,52 +68,117 @@ const createBookCards = (books) => {
   }
 }
 
-const bookFinished = (book) => {
+const setLocation = (book) => {
   return {
-      attachments: [{
+    text: ":tada: Congratulations on finishing this book! Now set a meetup! :tada:",
+    attachments: [{
       fallback: "Book information.",
       color: "#A2CD78",
       title: book.title,
       author_name: book.author,
-      pretext: ":tada: Congratulations on finishing this book! Now set a meetup! :tada:",
+      pretext: ":house: Choose a location :house:",
       callback_id: book.bookId,
-      actions: [
-        {
-          "name": "location",
-          "text": "Pick a location",
-          "type": "select",
-          "options": [
-            { "text": "Library 1", "value": "lib1" },
-            { "text": "Library 2", "value": "lib2" },
-            { "text": "Library 3", "value": "lib3" }
-          ],
-          "selected_options": [{
-            "text": "Library 2",
-            "value": "lib2"
-          }]
-        },
-      {
-        "name": "hour",
-        "text": "Pick a time",
+      actions: [{
+        "name": "location",
+        "text": "Pick a location",
         "type": "select",
         "options": [
-          { "text": "12:00", "value": 12 },
-          { "text": "15:00", "value": 15 },
-          { "text": "18:00", "value": 18 }
-        ],
-        "selected_options": [{
-          "text": "18:00",
-          "value": "18"
+          { "text": "Library 1", "value": "lib1" },
+          { "text": "Library 2", "value": "lib2" },
+          { "text": "Library 3", "value": "lib3" }
+        ]
+      }]
+    }]
+  }
+}
+
+const setDay = (book) => {
+  return {
+    text: ":tada: Congratulations on finishing this book! Now set a meetup! :tada:",
+    attachments: [{
+      "mrkdwn_in": ["text"],
+      text: `:house: Location: *${book.meetup.location}*`,
+      "color": "#A2CD78"
+    }, {
+      fallback: "Book information.",
+      color: "#A2CD78",
+      title: book.title,
+      author_name: book.author,
+      pretext: ":date: Choose a day :date:",
+      callback_id: book.bookId,
+      actions: [{
+          "name": "day",
+          "text": "Tomorrow",
+          "type": "button",
+          "value": "tomorrow"
+        }, {
+          "name": "day",
+          "text": "Next Saturday",
+          "type": "button",
+          "value": "nextSaturday"
+        }, {
+          "name": "day",
+          "text": "Next Sunday",
+          "type": "button",
+          "value": "nextSunday"
         }]
-      },
-      {
-        "name": "setMeetup",
-        "text": "Set meetup",
-        "type": "button",
-        "style": "primary",
-        "value": "setMeetup"
-      }
-      ]
+    }]
+  }
+}
+
+const setHour = (book) => {
+  return {
+    text: ":tada: Congratulations on finishing this book! Now set a meetup! :tada:",
+    attachments: [{
+      "mrkdwn_in": ["text"],
+      text: `:house: Location: *${book.meetup.location}*`,
+      "color": "#A2CD78"
+    }, {
+      "mrkdwn_in": ["text"],
+      text: `:date: Day: *${moment(book.meetup.day).format('dddd DD MMMM')}*`,
+      "color": "#A2CD78"
+    },{
+      fallback: "Book information.",
+      color: "#A2CD78",
+      title: book.title,
+      author_name: book.author,
+      pretext: ":clock11: Choose an hour :clock11:",
+      callback_id: book.bookId,
+      actions: [{
+          "name": "hour",
+          "text": "Pick an hour",
+          "type": "select",
+          "options": [
+            { "text": "09:00", "value": "9" },
+            { "text": "11:00", "value": "11" },
+            { "text": "13:00", "value": "13" },
+            { "text": "15:00", "value": "15" },
+            { "text": "17:00", "value": "17" }
+          ]
+        }]
+    }]
+  }
+}
+
+const meetupSummary = (book) => {
+  return {
+    text: `Everything is setup! Enjoy your meetup, share ideas and make new friends!`,
+    attachments: [{
+      "mrkdwn_in": ["text"],
+      text: `:book: *${book.title}* by _${book.author}_`,
+      "color": "#A2CD78"
+    },{
+      "mrkdwn_in": ["text"],
+      text: `:house: Where?: *${book.meetup.location}*`,
+      "color": "#A2CD78"
+    }, {
+      "mrkdwn_in": ["text"],
+      text: `:date: When?: *${moment(book.meetup.day).format('dddd DD MMMM')}*`,
+      "color": "#A2CD78"
+    },{
+      "mrkdwn_in": ["text"],
+      text: `:clock11: Hour?: *${book.meetup.hour}*`,
+      "color": "#A2CD78"
     }]
   }
 }
@@ -163,7 +229,10 @@ module.exports = {
   createButtonItem,
   createNoBookFound,
   createBookCards,
-  bookFinished,
+  setLocation,
+  setDay,
+  setHour,
   createRSVP,
-  createRatingItem
+  createRatingItem,
+  meetupSummary
 }

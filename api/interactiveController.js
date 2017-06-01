@@ -54,9 +54,30 @@ const startBook = (originalMessage, user, res) => {
 const finishBook = (bookId, res) => {
   repository
     .markBookAsFinished(bookId)
-    .then(r => { res.json(slackItems.bookFinished(r.value)) })
+    .then(r => { res.json(slackItems.setLocation(r.value)) })
     .catch(() => { res.send(404) })
 } 
+
+const setLocation = (bookId, location, res) => {
+  repository
+    .setMeetupLocation(bookId, location)
+    .then(r => { res.json(slackItems.setDay(r.value)) })
+    .catch(() => { res.send(404) })
+}
+
+const setDay = (bookId, day, res) => {
+  repository
+    .setMeetupDay(bookId, day)
+    .then(r => { res.json(slackItems.setHour(r.value)) })
+    .catch(() => { res.send(404) })
+}
+
+const setHour = (bookId, hour, res) => {
+  repository
+    .setMeetupHour(bookId, Number(hour))
+    .then(r => { res.json(slackItems.meetupSummary(r.value)) })
+    .catch((e) => { res.send(404) })
+}
 
 const setMeetup = (res) => {
   res.json(slackItems.createRSVP())
@@ -68,7 +89,6 @@ const handleRating = (rating = 0, callback_id, userId, res) => {
 
 const interactiveController = (req, res) => {
   const { original_message: originalMessage, user, actions, callback_id, action_ts } = JSON.parse(req.body.payload)
-
   switch (actions[0].name) {
     case 'join':
       joinBook(originalMessage, user, res)
@@ -79,11 +99,15 @@ const interactiveController = (req, res) => {
     case 'finish':
       finishBook(callback_id, res)
       break
-    case 'setMeetup':
-      setMeetup(res)
+    case 'location':
+      setLocation(callback_id, actions[0].selected_options[0].value, res)
       break
-    default:
-      handleRating(ratings[actions[0].name], callback_id, user.id, res)
+    case 'day':
+      setDay(callback_id, actions[0].value, res)
+      break
+    case 'hour':
+      setHour(callback_id, actions[0].selected_options[0].value, res)
+      break
   }
 }
 

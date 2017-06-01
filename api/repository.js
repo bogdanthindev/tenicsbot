@@ -1,5 +1,4 @@
-const md5 = require('md5')
-const _ = require('lodash')
+const moment = require('moment')
 
 const joinBook = ({ author, title, userId }) =>
   mongo.collection('books')
@@ -27,6 +26,44 @@ const saveBook = (book) => mongo.collection('books').insertOne(Object.assign(boo
 
 const checkAndAddBook = book => checkBookInDb(book).then(b => !!b ? b : saveBook(book))
 
+const setMeetupLocation = (bookId, location) => {
+  return mongo.collection('books')
+    .findOneAndUpdate(
+      { bookId },
+      { $set: { 'meetup.location': location } },
+      { upsert: true, returnOriginal: false }
+    )
+}
+
+const dateFormatter = (day, format = 'YYYY-MM-DD') => {
+  switch (day) {
+    case 'tomorrow':
+      return moment().add(1, 'd').format(format)
+    case 'nextSaturday':
+      return moment().day(6).format(format)
+    case 'nextSunday':
+      return moment().day(7).format(format)
+  }
+}
+
+const setMeetupDay = (bookId, day) => {
+  return mongo.collection('books')
+    .findOneAndUpdate(
+      { bookId },
+      { $set: { 'meetup.day': dateFormatter(day) } },
+      { upsert: true, returnOriginal: false }
+    )
+}
+
+const setMeetupHour = (bookId, hour) => {
+  return mongo.collection('books')
+    .findOneAndUpdate(
+      { bookId },
+      { $set: { 'meetup.hour': hour } },
+      { upsert: true, returnOriginal: false }
+    )
+}
+
 const changeBookRating = (bookId, userId, rating) => {
     const collection = mongo.collection('books')
     const query = { id: bookId, 'users.id': userId }
@@ -45,5 +82,8 @@ module.exports = {
   checkBookInDb,
   saveBook,
   changeBookRating,
-  checkAndAddBook
+  checkAndAddBook,
+  setMeetupLocation,
+  setMeetupDay,
+  setMeetupHour
 }
