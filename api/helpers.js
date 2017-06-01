@@ -1,4 +1,4 @@
-const getJoinedUsers = (book) => book.users.map(u => `<@${u.id}>`).join(', ') + ' joined'
+const getJoinedUsers = (book) => book.users.map(u => `<@${u}>`).join(', ') + ' joined'
 
 const getFooter = (book) =>
   book.users.length === 0

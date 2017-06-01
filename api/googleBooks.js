@@ -1,51 +1,22 @@
-const books = require('google-books-search')
-const Promise = require('bluebird')
+const fetch = require('node-fetch')
 
-const options = {
-  limit: 1,
-  type: 'books',
-  order: 'relevance',
-  lang: 'en'
-}
+const createGoogleFetchURL = (searchItem, lang = 'en') =>
+  encodeURI(`https://www.googleapis.com/books/v1/volumes?q=${searchItem}&langRestrict=${lang}&orderBy=relevance&maxResults=3`)
 
-const mapBookResult = ({
-  id, title, authors, description, pageCount, averageRating, thumbnail, link
-}) => ({
-  id, title, authors, description, pageCount, averageRating, thumbnail, link
+const mapBookItem = (book) => ({
+  "bookId": book.id,
+  "title": book.volumeInfo.title,
+  "author": book.volumeInfo.authors[0],
+  "thumbnail": book.volumeInfo.imageLinks.thumbnail,
+  "description": book.volumeInfo.description,
+  "pages": book.volumeInfo.pageCount
 })
 
-const searchByTitle = (bookTitle, bookLimit = 3) => {
-  let titleSearchPromise = new Promise((resolve, reject) => {
-    books.search(bookTitle, Object.assign({}, options, { field: 'title' }), (err, result, apiResponse) => {
-      if (err) return reject(err)
-      resolve(result.slice(0, bookLimit).map(mapBookResult))
-    })
-  })
-  return titleSearchPromise
-}
-
-const searchByAuthor = (author, bookLimit = 3) => {
-  let authorSearchPromise = new Promise((resolve, reject) => {
-    books.search(author, Object.assign({}, options, { field: 'author' }), (err, result, apiResponse) => {
-      if (err) return reject(err)
-      resolve(result.slice(0, bookLimit).map(mapBookResult))
-    })
-  })
-  return authorSearchPromise
-}
-
-const searchByTitleAndAuthor = (bookTitle, author) => {
-  let titleAndAuthorPromise = new Promise((resolve, reject) => {
-    books.search(`${bookTitle} ${author}`, options, (err, result, apiResponse) => {
-      if (err) return reject(err)
-      resolve(result.slice(0, 1).map(mapBookResult))
-    })
-  })
-  return titleAndAuthorPromise
-}
+const searchBook = (bookTitle, author) =>
+  fetch(createGoogleFetchURL(`${bookTitle} ${author}`.trim()))
+    .then(r => r.json())
+    .then(result => mapBookItem(result.items[0]))
 
 module.exports = {
-  searchByTitle,
-  searchByAuthor,
-  searchByTitleAndAuthor
+  searchBook
 }

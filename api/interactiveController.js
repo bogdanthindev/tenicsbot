@@ -37,25 +37,23 @@ const joinBook = (originalMessage, user, res) => {
 }
 
 const startBook = (originalMessage, user, res) => {
-  repository.startBook(originalMessage, user, (err, book) => {
-    if (err) {
-        res.send(404)
-    }
-
-    const newAttachment = Object.assign({}, originalMessage.attachments[0], {
+  repository.startBook(originalMessage, user)
+    .then(resp => {
+      const newAttachment = Object.assign({}, originalMessage.attachments[0], {
         actions: [originalMessage.attachments[0].actions[0]],
-        footer: getFooter(book)
+        footer: getFooter(resp.value)
+      })
+      console.log('new attachment', JSON.stringify(newAttachment, null, 2))
+      res.json({ attachments: [
+        newAttachment,
+        {
+          "text": "The reading of this book has started.",
+          "color": "#A2CD78"
+        }
+      ]})
     })
-
-  res.json({ attachments: [
-    newAttachment,
-    {
-      "fallback": "Required plain-text summary of the attachment.",
-      "color": "#A2CD78",
-      "text": "The reading of this book has started.",
-    }
-  ]})
-})}
+    .catch(() => { res.send(404) })
+}
 
 const finishBook = (bookId, res) => {
   repository

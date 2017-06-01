@@ -31,7 +31,7 @@ const createAttachmentItem = (item) => {
       title: item.title,
       title_link: item.link,
       text: item.description,
-      thumb_url: item.thumbnail,
+      image_url: item.thumbnail,
       callback_id: 'bookCard',
       actions: actions
     }

@@ -3,24 +3,21 @@ const bodyParser = require('body-parser')
 const apiAiController = require('./api/apiAiController')
 const interactiveController = require('./api/interactiveController')
 const Agenda = require('agenda')
-const mongoString = 'mongodb://localhost:27017/tenicsbot';
+const mongoString = 'mongodb://localhost:27017/tenicsbot'
 const reminderController = require('./api/reminderController')
 
-function connectToMongoDB(cb) {
-    const MongoClient = require('mongodb').MongoClient;
+const connectToMongoDB = (cb) => {
+  const MongoClient = require('mongodb').MongoClient
 
-    MongoClient.connect(mongoString, function mongoConnect(err, conn) {
-        if (err) {
-            return cb(err);
-        }
+  MongoClient.connect(mongoString, function mongoConnect(err, conn) {
+      if (err) { return cb(err) }
 
-        global.mongo = conn;
-
-        return cb();
-    });
+      global.mongo = conn
+      return cb()
+  })
 }
 
-function startServer() {
+const startServer = () => {
     const app = express()
 
     app.use(bodyParser.json())
@@ -31,10 +28,8 @@ function startServer() {
     app.post('/interactive', interactiveController)
 
 
-    let agenda = new Agenda({db: {address: mongoString}})
-
+    const agenda = new Agenda({db: {address: mongoString}})
     agenda.define('send reminders', reminderController.sendReminders);
-
     agenda.on('ready', () => {
         agenda.every('30 seconds', 'send reminders')
         agenda.start()
@@ -44,10 +39,6 @@ function startServer() {
     const server = app.listen(5000, () => {
         console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env)
     })
-
-
-
 }
 
 connectToMongoDB(startServer);
-
