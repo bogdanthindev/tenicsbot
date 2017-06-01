@@ -1,40 +1,16 @@
 const md5 = require('md5')
 const _ = require('lodash')
 
-const joinBook = (originalMessage, user, cb) => {
-    let book = initBook(originalMessage, user)
-    let collection = mongo.collection('books')
+const joinBook = (originalMessage, user) => {
+  const { author_name: author, title } = originalMessage.attachments[0]
+  const { id: userId } = user
 
-    collection.find({id: book.id}).limit(1).toArray((err, foundBooks) => {
-        if (err) {
-            return cb(err)
-        }
-
-        if (foundBooks.length) {
-            foundBook = foundBooks[0]
-            let index = _.findIndex(foundBook.users, {id: user.id})
-            if (index == -1) {
-                collection.updateOne({id: book.id}, {$push: {users: user}}, (err) => {
-                    if (err) {
-                        return cb(err)
-                    }
-
-                    foundBook.users.push(user)
-                    return cb(null, foundBook)
-                })
-            } else {
-                return cb(null, foundBook)
-            }
-        } else {
-            collection.insertOne(book, (err) => {
-                if (err) {
-                    return cb(err)
-                }
-
-                return cb(null, book)
-            })
-        }
-    })
+  return mongo.collection('books')
+    .findOneAndUpdate(
+      { title, author },
+      { $addToSet: { users: userId } },
+      { returnOriginal: false }
+    )
 }
 
 function initBook (originalMessage, user) {

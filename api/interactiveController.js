@@ -9,31 +9,22 @@ const ratings = {
 }
 
 const joinBook = (originalMessage, user, res) => {
-  repository.joinBook(originalMessage, user, (err, book) => {
-    if (err) {
-        res.send(404)
-    }
-
-    const newAttachment = Object.assign({}, originalMessage.attachments[0], {
+  repository.joinBook(originalMessage, user)
+    .then(resp => {
+      const book = resp.value
+      const newAttachment = Object.assign({}, originalMessage.attachments[0], {
         footer: getFooter(book)
+      })
+
+      res.json({ attachments: [
+        newAttachment,
+        book.status === 'progress' && {
+          text: 'The reading of this book is in progress. Talk and share ideas with the other group members.',
+          "color": "#A2CD78"
+        }
+      ]})
     })
-
-    let attachments = [
-        newAttachment
-      ]
-
-    if (book.status === 'progress') {
-        attachments.push({
-          "fallback": "Required plain-text summary of the attachment.",
-          "color": "#A2CD78",
-          "text": "The reading of this book has started.",
-        })
-    }
-
-    let response = { attachments: attachments}
-
-    res.json(response)
-  })
+    .catch(() => { res.send(404) })
 }
 
 const startBook = (originalMessage, user, res) => {
@@ -43,7 +34,6 @@ const startBook = (originalMessage, user, res) => {
         actions: [originalMessage.attachments[0].actions[0]],
         footer: getFooter(resp.value)
       })
-      console.log('new attachment', JSON.stringify(newAttachment, null, 2))
       res.json({ attachments: [
         newAttachment,
         {
