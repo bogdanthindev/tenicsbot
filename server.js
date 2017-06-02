@@ -29,6 +29,7 @@ const startServer = () => {
   app.post('/webhook', apiAiController)
   app.post('/interactive', interactiveController)
 
+  SlackClient.getAllChannels()
 
   const agenda = new Agenda({db: {address: mongoString}})
   agenda.define('send reminders', reminderController.sendReminders);

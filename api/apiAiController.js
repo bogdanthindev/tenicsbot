@@ -2,6 +2,7 @@ const apiAiParser = require('./apiAiParser')
 const slackItems = require('./slackItems')
 const { searchBook } = require('./googleBooks')
 const { getBooksByStatus, checkBookInDb, saveBook, checkAndAddBook } = require('./repository')
+const SlackClient = require('./slackClient')
 
 const sendMessage = (response) => (data) => {
   if (!data || !data.attachments.length) {
@@ -20,7 +21,7 @@ const createResponse = (data) =>
 
 const Controller = (req, res) => {
   const data = apiAiParser.parseBody(req.body)
-  const { parameters: { author, book } } = data
+  const { parameters: { author, book }, user, channel } = data
 
   switch (data.action) {
     case 'search_book':
@@ -39,7 +40,26 @@ const Controller = (req, res) => {
     case 'show_meetups':
       getBooksByStatus('meetup')
         .then(slackItems.createMeetups)
-        .then(sendMessage(res))
+        .then(({ text, attachments }) => {
+          SlackClient.sendPrivateMessage(
+            channel,
+            {
+              text,
+              opts: {
+                attachments: attachments.map(
+                  att => SlackClient.isPrivateChannel(channel)
+                    ? Object.assign({}, att, { actions: [{
+                      "name": "joinMeetup",
+                      "text": "Join meetup :+1:",
+                      "type": "button",
+                      "style": "primary",
+                      "value": "joinMeetup"
+                    }]})
+                    : att
+                )
+              }
+            })
+        })
         .catch(e => { sendMessage(res)({}) })
       break
     default:

@@ -52,6 +52,26 @@ const startBook = (originalMessage, user, res) => {
     .catch(() => { res.send(404) })
 }
 
+const joinMeetup = (originalMessage, { bookId, userId }, res) => {
+  repository
+    .joinMeetup({ bookId, userId })
+    .then(resp => {
+      const book = resp.value
+      const newMessage = Object.assign({}, originalMessage, {
+        attachments: originalMessage.attachments.map(
+          att => att.callback_id === bookId
+            ? Object.assign({}, att, {
+              actions: [],
+              footer: `${book.meetup.attending.length} people attending`
+            })
+            : att
+        )
+      })
+      res.json(newMessage)
+    })
+    .catch((e) => { res.send(404) })
+}
+
 const finishBook = (bookId, res) => {
   repository
     .markBookAsFinished(bookId)
@@ -98,7 +118,9 @@ const setMeetup = (res) => {
 }
 
 const handleRating = (rating = 0, callback_id, userId, res) => {
-  repository.changeBookRating(callback_id, userId, rating).then(r => console.log(r))
+  repository
+    .changeBookRating(callback_id, userId, rating)
+    .then()
 }
 
 const interactiveController = (req, res) => {
@@ -121,6 +143,9 @@ const interactiveController = (req, res) => {
       break
     case 'hour':
       setHour(callback_id, actions[0].selected_options[0].value, res)
+      break
+    case 'joinMeetup':
+      joinMeetup(originalMessage, { bookId: callback_id, userId: user.id }, res)
       break
   }
 }

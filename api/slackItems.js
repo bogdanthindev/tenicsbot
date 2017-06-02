@@ -186,13 +186,14 @@ const meetupSummary = (book) => {
 const createMeetups = (books) => {
   return {
     text: `These are the upcoming meetups`,
-    attachments: books.map(({ title, author, meetup: { location, day, hour }, users }) => ({
+    attachments: books.map(({ title, author, meetup: { location, day, hour }, users, bookId }) => ({
       "mrkdwn_in": ["text"],
       title: `${title}`,
       author_name: `${author}`,
       text: `:house: _${location}_ :date: _${moment(day).format('dddd DD MMMM')}_ :clock11: _${hour}_`,
       footer: `${users.length} attending`,
-      "color": "#A2CD22"
+      "color": "#A2CD22",
+      callback_id: bookId
     }))
   }
 }

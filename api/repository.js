@@ -8,6 +8,14 @@ const joinBook = ({ author, title, userId }) =>
       { returnOriginal: false }
     )
 
+const joinMeetup = ({ bookId, userId }) =>
+  mongo.collection('books')
+    .findOneAndUpdate(
+      { bookId },
+      { $addToSet: { 'meetup.attending': userId } },
+      { upsert: true, returnOriginal: false }
+    )
+
 const startBook = ({ author, title, userId }) =>
   mongo.collection('books')
     .findOneAndUpdate(
@@ -79,6 +87,7 @@ const changeBookRating = (bookId, userId, rating) => {
 module.exports = {
   joinBook,
   startBook,
+  joinMeetup,
   getBooksByStatus,
   markBookAsFinished,
   checkBookInDb,
