@@ -183,6 +183,20 @@ const meetupSummary = (book) => {
   }
 }
 
+const createMeetups = (books) => {
+  return {
+    text: `These are the upcoming meetups`,
+    attachments: books.map(({ title, author, meetup: { location, day, hour }, users }) => ({
+      "mrkdwn_in": ["text"],
+      title: `${title}`,
+      author_name: `${author}`,
+      text: `:house: _${location}_ :date: _${moment(day).format('dddd DD MMMM')}_ :clock11: _${hour}_`,
+      footer: `${users.length} attending`,
+      "color": "#A2CD22"
+    }))
+  }
+}
+
 const createRSVP = (time = '18:00', location = 'Library 2') => ({
     attachments: [{
         title: `Are you attending to the meetup at ${location} - ${time}?`,
@@ -234,5 +248,6 @@ module.exports = {
   setHour,
   createRSVP,
   createRatingItem,
-  meetupSummary
+  meetupSummary,
+  createMeetups
 }

@@ -22,19 +22,28 @@ const Controller = (req, res) => {
   const data = apiAiParser.parseBody(req.body)
   const { parameters: { author, book } } = data
 
-  if (data.action === 'search_book') {
-    searchBook(book, author)
-      .then(checkAndAddBook)
-      .then(createResponse)
-      .then(sendMessage(res))
-      .catch(e => { sendMessage(res)({}) })
-  } else if (data.action === 'ongoing_book') {
-    getBooksByStatus()
-      .then(slackItems.createBookCards)
-      .then(sendMessage(res))
-      .catch(e => { sendMessage(res)({}) })
-  } else {
-    sendMessage(res, data)
+  switch (data.action) {
+    case 'search_book':
+      searchBook(book, author)
+        .then(checkAndAddBook)
+        .then(createResponse)
+        .then(sendMessage(res))
+        .catch(e => { sendMessage(res)({}) })
+      break
+    case 'ongoing_book':
+      getBooksByStatus()
+        .then(slackItems.createBookCards)
+        .then(sendMessage(res))
+        .catch(e => { sendMessage(res)({}) })
+      break
+    case 'show_meetups':
+      getBooksByStatus('meetup')
+        .then(slackItems.createMeetups)
+        .then(sendMessage(res))
+        .catch(e => { sendMessage(res)({}) })
+      break
+    default:
+      sendMessage(res)(data)
   }
 }
 
