@@ -6,6 +6,8 @@ const Agenda = require('agenda')
 const mongoString = 'mongodb://localhost:27017/tenicsbot'
 const reminderController = require('./api/reminderController')
 
+const SlackClient = require('./api/slackClient')
+
 const connectToMongoDB = (cb) => {
   const MongoClient = require('mongodb').MongoClient
 

@@ -16,8 +16,8 @@ const startBook = ({ author, title, userId }) =>
         { upsert: true, returnOriginal: false }
     )
 
-const getInProgressBooks = () =>
-  mongo.collection('books').find({status: 'progress'}).toArray()
+const getBooksByStatus = (status = 'progress') =>
+  mongo.collection('books').find({ status }).toArray()
 
 const markBookAsFinished = (bookId) =>
   mongo.collection('books')
@@ -61,7 +61,7 @@ const setMeetupHour = (bookId, hour) => {
   return mongo.collection('books')
     .findOneAndUpdate(
       { bookId },
-      { $set: { 'meetup.hour': hour } },
+      { $set: { 'meetup.hour': hour, status: 'meetup' } },
       { upsert: true, returnOriginal: false }
     )
 }
@@ -79,7 +79,7 @@ const changeBookRating = (bookId, userId, rating) => {
 module.exports = {
   joinBook,
   startBook,
-  getInProgressBooks,
+  getBooksByStatus,
   markBookAsFinished,
   checkBookInDb,
   saveBook,

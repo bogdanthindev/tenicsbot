@@ -1,7 +1,7 @@
 const apiAiParser = require('./apiAiParser')
 const slackItems = require('./slackItems')
 const { searchBook } = require('./googleBooks')
-const { getInProgressBooks, checkBookInDb, saveBook, checkAndAddBook } = require('./repository')
+const { getBooksByStatus, checkBookInDb, saveBook, checkAndAddBook } = require('./repository')
 
 const sendMessage = (response) => (data) => {
   if (!data || !data.attachments.length) {
@@ -29,7 +29,7 @@ const Controller = (req, res) => {
       .then(sendMessage(res))
       .catch(e => { sendMessage(res)({}) })
   } else if (data.action === 'ongoing_book') {
-    getInProgressBooks()
+    getBooksByStatus()
       .then(slackItems.createBookCards)
       .then(sendMessage(res))
       .catch(e => { sendMessage(res)({}) })

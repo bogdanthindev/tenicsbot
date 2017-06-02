@@ -1,6 +1,7 @@
 const slackItems = require('./slackItems')
 const repository = require('./repository')
 const { getFooter } = require('./helpers')
+const SlackClient = require('./slackClient')
 
 const ratings = {
   'positive': 5,
@@ -75,7 +76,20 @@ const setDay = (bookId, day, res) => {
 const setHour = (bookId, hour, res) => {
   repository
     .setMeetupHour(bookId, Number(hour))
-    .then(r => { res.json(slackItems.meetupSummary(r.value)) })
+    .then(r => {
+      const summary = slackItems.meetupSummary(r.value)
+      res.json(summary)
+
+      return { summary, users: r.value.users }
+    })
+    .then(({ summary: { text, attachments }, users }) => {
+      users.forEach(userId => {
+        SlackClient.sendPrivateMessage(
+          userId,
+          { text, opts: { attachments } }
+        )
+      })
+    })
     .catch((e) => { res.send(404) })
 }
 

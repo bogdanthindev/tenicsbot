@@ -15,7 +15,7 @@ module.exports.sendReminders = (job, done) => {
 }
 
 function loadBooksInProgress() {
-    return repository.getInProgressBooks()
+    return repository.getBooksByStatus()
 }
 
 function sendReminder(book) {
