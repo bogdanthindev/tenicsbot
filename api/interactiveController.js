@@ -52,7 +52,7 @@ const startBook = (originalMessage, user, res) => {
     .catch(() => { res.send(404) })
 }
 
-const joinMeetup = (originalMessage, { bookId, userId }, res) => {
+const joinMeetup = (channelId, ts, originalMessage, { bookId, userId }, res) => {
   repository
     .joinMeetup({ bookId, userId })
     .then(resp => {
@@ -68,6 +68,7 @@ const joinMeetup = (originalMessage, { bookId, userId }, res) => {
         )
       })
       res.json(newMessage)
+      // SlackClient.updateMessage(channelId, ts, newMessage)
     })
     .catch((e) => { res.send(404) })
 }
@@ -124,7 +125,7 @@ const handleRating = (rating = 0, callback_id, userId, res) => {
 }
 
 const interactiveController = (req, res) => {
-  const { original_message: originalMessage, user, actions, callback_id, action_ts } = JSON.parse(req.body.payload)
+  const { original_message: originalMessage, user, actions, callback_id: bookId, action_ts, message_ts, channel: { id: channelId } } = JSON.parse(req.body.payload)
   switch (actions[0].name) {
     case 'join':
       joinBook(originalMessage, user, res)
@@ -133,19 +134,19 @@ const interactiveController = (req, res) => {
       startBook(originalMessage, user, res)
       break
     case 'finish':
-      finishBook(callback_id, res)
+      finishBook(bookId, res)
       break
     case 'location':
-      setLocation(callback_id, actions[0].selected_options[0].value, res)
+      setLocation(bookId, actions[0].selected_options[0].value, res)
       break
     case 'day':
-      setDay(callback_id, actions[0].value, res)
+      setDay(bookId, actions[0].value, res)
       break
     case 'hour':
-      setHour(callback_id, actions[0].selected_options[0].value, res)
+      setHour(bookId, actions[0].selected_options[0].value, res)
       break
     case 'joinMeetup':
-      joinMeetup(originalMessage, { bookId: callback_id, userId: user.id }, res)
+      joinMeetup(channelId, message_ts, originalMessage, { bookId, userId: user.id }, res)
       break
   }
 }

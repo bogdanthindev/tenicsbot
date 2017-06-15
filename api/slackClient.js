@@ -10,9 +10,20 @@ class SlackClient {
     return !this.channels.find(ch => ch.id === channel)
   }
 
-  sendPrivateMessage (channel, { text, opts }) {
-    this.isPrivateChannel(channel)
-    return Promise.resolve(this.client.chat.postMessage(channel, text, opts))
+  sendPrivateMessage (channelId, { text, opts }) {
+    return Promise.resolve(this.client.chat.postMessage(channelId, text, opts))
+  }
+
+  sendInteractiveMessage (channelId, message) {
+    return Promise.resolve(this.client.chat.postMessage(channelId, message.text, {
+      attachments: message.attachments
+    }))
+  }
+
+  updateMessage (channelId, ts, message) {
+    return Promise.resolve(this.client.chat.update(ts, channelId, message.text, {
+      attachments: message.attachments
+    }))
   }
 
   getAllChannels () {
