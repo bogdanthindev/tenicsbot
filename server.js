@@ -3,7 +3,8 @@ const bodyParser = require('body-parser')
 const apiAiController = require('./api/apiAiController')
 const interactiveController = require('./api/interactiveController')
 const Agenda = require('agenda')
-const mongoString = 'mongodb://localhost:27017/tenicsbot'
+const mongoString = 'mongodb://tenicsbot:development@ds129352.mlab.com:29352/tenicsbot'
+
 const reminderController = require('./api/reminderController')
 
 const SlackClient = require('./api/slackClient')
