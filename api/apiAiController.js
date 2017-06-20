@@ -5,6 +5,7 @@ const { getBooksByStatus, checkBookInDb, saveBook, checkAndAddBook } = require('
 const SlackClient = require('./slackClient')
 
 const sendMessage = (response) => (data) => {
+  console.log('sendmsg', data)
   if (!data || !data.attachments.length) {
     response.json({})
       return

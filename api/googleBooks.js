@@ -12,10 +12,13 @@ const mapBookItem = (book) => ({
   "pages": book.volumeInfo.pageCount
 })
 
-const searchBook = (bookTitle, author) =>
+const searchBook = (bookTitle, author) => {
+  const fetchUrl = createGoogleFetchURL(`${bookTitle} ${author}`.trim())
+  console.log('search url', fetchUrl)
   fetch(createGoogleFetchURL(`${bookTitle} ${author}`.trim()))
     .then(r => r.json())
     .then(result => mapBookItem(result.items[0]))
+}
 
 module.exports = {
   searchBook
