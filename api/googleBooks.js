@@ -16,13 +16,9 @@ const mapBookItem = book => ({
 
 const searchBook = (bookTitle, author) => {
   const fetchUrl = createGoogleFetchURL(`${bookTitle} ${author}`.trim())
-  console.log('search url', fetchUrl)
   return fetch(createGoogleFetchURL(`${bookTitle} ${author}`.trim()))
     .then(r => r.json())
-    .then(result => {
-      console.log('book results', JSON.stringify(result, null, 2))
-      return mapBookItem(result.items[0])
-    })
+    .then(result => mapBookItem(result.items[0]))
 }
 
 module.exports = {

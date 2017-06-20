@@ -5,7 +5,6 @@ const { getBooksByStatus, checkBookInDb, saveBook, checkAndAddBook } = require('
 const SlackClient = require('./slackClient')
 
 const sendMessage = (response) => (data) => {
-  console.log('sendmsg', data)
   if (!data || !data.attachments.length) {
     response.json({})
       return
@@ -22,7 +21,6 @@ const createResponse = (data) =>
 
 const Controller = (req, res) => {
   const data = apiAiParser.parseBody(req.body)
-  console.log('api ai ctrl', data)
   const { parameters: { author, book }, user, channel } = data
 
   switch (data.action) {
