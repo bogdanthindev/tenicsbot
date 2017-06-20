@@ -1,5 +1,4 @@
 const { WebClient } = require('@slack/client')
-const { SLACK_BOT_API_TOKEN } = require('../config')
 
 class SlackClient {
   constructor (token) {
@@ -40,4 +39,4 @@ class SlackClient {
   }
 }
 
-module.exports = new SlackClient(SLACK_BOT_API_TOKEN)
+module.exports = new SlackClient(process.env.SLACK_BOT_API_TOKEN)
