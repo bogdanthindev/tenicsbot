@@ -9,11 +9,13 @@ const reminderController = require('./api/reminderController')
 
 const SlackClient = require('./api/slackClient')
 
-const connectToMongoDB = (cb) => {
+const connectToMongoDB = cb => {
   const MongoClient = require('mongodb').MongoClient
 
   MongoClient.connect(mongoString, function mongoConnect(err, conn) {
-    if (err) { return cb(err) }
+    if (err) {
+      return cb(err)
+    }
 
     global.mongo = conn
     return cb()
@@ -32,17 +34,21 @@ const startServer = () => {
 
   // SlackClient.getAllChannels()
 
-  const agenda = new Agenda({db: {address: mongoString}})
-  agenda.define('send reminders', reminderController.sendReminders);
+  const agenda = new Agenda({ db: { address: mongoString } })
+  agenda.define('send reminders', reminderController.sendReminders)
   agenda.on('ready', () => {
     agenda.every('30 seconds', 'send reminders')
     agenda.start()
   })
 
-
-  const server = app.listen(5000, () => {
-    console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env)
+  console.log('port: ', process.env.PORT)
+  const server = app.listen(process.env.PORT || 5000, () => {
+    console.log(
+      'Express server listening on port %d in %s mode',
+      server.address().port,
+      app.settings.env
+    )
   })
 }
 
-connectToMongoDB(startServer);
+connectToMongoDB(startServer)

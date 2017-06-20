@@ -21,6 +21,7 @@ const createResponse = (data) =>
 
 const Controller = (req, res) => {
   const data = apiAiParser.parseBody(req.body)
+  console.log('api ai ctrl', data)
   const { parameters: { author, book }, user, channel } = data
 
   switch (data.action) {
